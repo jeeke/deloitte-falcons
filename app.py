@@ -21,6 +21,12 @@ def root():
     return jsonify({'message': "Welcome to Falcon\'s Web API"})
 
 @app.route('/train', methods=['GET'])
+def untrain():
+    global knn
+    knn = None
+    return jsonify({'message': "Model Untrained"})
+
+@app.route('/train', methods=['GET'])
 def train():
     url = "https://falcons-cyber.firebaseio.com/train.json"
     r = requests.get(url)
