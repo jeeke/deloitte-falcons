@@ -91,8 +91,8 @@ def prediction():
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
-            n = m.json()   
-            if n: 
+            if m: 
+                n = m.json()   
                 o=pd.DataFrame(n)
                 p =o.T
                 p.reset_index(inplace=True,drop=True)
@@ -114,7 +114,7 @@ def prediction():
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
-        return jsonify({'Train the model first'})
+        return jsonify({'message':'Train the model first'})
 
 
 @app.route('/canalysis', methods=['GET'])
