@@ -18,7 +18,7 @@ global knn
 
 @app.route('/', methods=['GET'])
 def root():
-    return ('Welcome to Falcon\'s ML API')
+    return jsonify({'message': "Welcome to Falcon\'s Web API"})
 
 @app.route('/train', methods=['GET'])
 def train():
@@ -68,7 +68,7 @@ def train():
     global knn
     knn = KNeighborsClassifier()
     knn.fit(X,y)
-    return ('Model Trained')
+    return jsonify({'message': "Model Trained"})
     # joblib.dump(knn, 'model3.pkl')
     # print("Model3 dumped!")
 
