@@ -86,6 +86,7 @@ def train():
 def prediction():
     # knn = joblib.load("model3.pkl")# Load "model.pkl"
     # print ('knn loaded')
+    global knn
     if knn:
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
