@@ -14,8 +14,10 @@ from sklearn.cluster import KMeans
 
 # Your API definition
 app = Flask(__name__)
-global knn
+global knn 
+knn = None
 global model2FileData
+model2FileData = None
 
 @app.route('/', methods=['GET'])
 def root():
@@ -87,7 +89,8 @@ def prediction():
     # knn = joblib.load("model3.pkl")# Load "model.pkl"
     # print ('knn loaded')
     global knn
-    if knn:
+    x = knn
+    if x:
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
