@@ -16,6 +16,10 @@ from sklearn.cluster import KMeans
 app = Flask(__name__)
 global knn
 
+@app.route('/', methods=['GET'])
+def root():
+    return ('Welcome to Falcon\'s ML API')
+
 @app.route('/train', methods=['GET'])
 def train():
     url = "https://falcons-cyber.firebaseio.com/train.json"
@@ -36,14 +40,16 @@ def train():
     a=pd.DataFrame({'Cyberloafer Type':km.labels_,'Name of the Employee':df['name']})
     l = sum(a['Cyberloafer Type']==0)
     h = sum(a['Cyberloafer Type']==1)
-    d = {}
+    d = []
     for i in range(0,len(a)):
-        d[str(a.iloc[i][1])] = a.iloc[i][0].astype('str')
+        dic = { 'name' : a.iloc[i][1],
+                        'prediction' : a.iloc[i][0].astype('str') }
+        d.append(dic)
     res = {
         'list' : d,
         'graph' : {
-            '0' : l,
-            '1' : h
+            'low' : l,
+            'high' : h
         }
     }
     import json
