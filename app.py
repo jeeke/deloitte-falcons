@@ -91,8 +91,8 @@ def prediction():
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
-            if m: 
-                n = m.json()   
+            n = m.json()   
+            if n: 
                 o=pd.DataFrame(n)
                 p =o.T
                 p.reset_index(inplace=True,drop=True)
