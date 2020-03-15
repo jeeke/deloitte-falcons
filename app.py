@@ -113,4 +113,4 @@ if __name__ == '__main__':
         port = int(sys.argv[1]) # This is for a command-line input
     except:
         port = 5000
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(port=port, debug=True)
