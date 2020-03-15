@@ -101,7 +101,7 @@ def prediction():
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
-        return ('Train the model first')
+        return jsonify({'Train the model first'})
 
 
 @app.route('/canalysis', methods=['GET'])
