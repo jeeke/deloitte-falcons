@@ -110,7 +110,8 @@ def canalysis():
 
 if __name__ == '__main__':
     try:
-        port = int(sys.argv[1]) # This is for a command-line input
+        import os
+        port = os.getenv('PORT') # This is for a command-line input
     except:
-        port = 5000
+        port = 8000
     app.run(port=port, debug=True)
