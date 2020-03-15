@@ -15,6 +15,7 @@ from sklearn.cluster import KMeans
 # Your API definition
 app = Flask(__name__)
 global knn
+global model2FileData
 
 @app.route('/', methods=['GET'])
 def root():
@@ -22,8 +23,9 @@ def root():
 
 @app.route('/train', methods=['GET'])
 def untrain():
-    global knn
+    global knn,model2FileData
     knn = None
+    model2FileData = None
     return jsonify({'message': "Model Untrained"})
 
 @app.route('/train', methods=['GET'])
@@ -58,9 +60,8 @@ def train():
                 'high' : h
             }
         }
-        import json
-        with open(r'model2_static.json', 'w') as f:
-            json.dump(res, f)
+        global model2FileData
+        model2FileData = json.dumps(res)
 
         a=pd.DataFrame({'Cyberloafer Type':km.labels_,'Name of the Employee':df['name']})
 
@@ -117,12 +118,11 @@ def prediction():
 
 @app.route('/canalysis', methods=['GET'])
 def canalysis():
-        try:
-            with open(r'model2_static.json') as f:
-                return json.load(f)
-        except:
-
-            return jsonify({'trace': traceback.format_exc()})
+    global model2FileData
+    if model2FileData:
+        return model2FileData
+    else:
+        return jsonify({'message': "Please train the model first"})
 
 
 if __name__ == '__main__':
