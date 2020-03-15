@@ -22,11 +22,12 @@ def root():
 
 @app.route('/train', methods=['GET'])
 def train():
-    url = "https://falcons-cyber.firebaseio.com/train.json"
+    url = "https://falcons-cyber.firebaseio.com/predict.json"
     r = requests.get(url)
+    if r:
+        return jsonify({'message': "No data here to train"})
     v = r.json()
     # print(v)
-
     trans=pd.DataFrame(v)
     df=trans.T
     df.reset_index(inplace=True,drop=True)
