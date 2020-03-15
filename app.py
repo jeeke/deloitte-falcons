@@ -21,7 +21,7 @@ global model2FileData
 def root():
     return jsonify({'message': "Welcome to Falcon\'s Web API"})
 
-@app.route('/train', methods=['GET'])
+@app.route('/untrain', methods=['GET'])
 def untrain():
     global knn,model2FileData
     knn = None
