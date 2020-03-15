@@ -90,8 +90,8 @@ def prediction():
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
-            if m:
-                n = m.json()
+            n = m.json()   
+            if n: 
                 o=pd.DataFrame(n)
                 p =o.T
                 p.reset_index(inplace=True,drop=True)
@@ -108,7 +108,7 @@ def prediction():
                             'prediction' : out.iloc[i][1].astype('str') }
                     d1.append(dic) 
                 return json.dumps(d1)
-            else :
+            else:
                 return jsonify({'message': "No data here to predict"})
         except:
             return jsonify({'trace': traceback.format_exc()})
