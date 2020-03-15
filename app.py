@@ -111,7 +111,7 @@ def prediction():
                     dic = { 'name' : out.iloc[i][0],
                             'prediction' : out.iloc[i][1].astype('str') }
                     d1.append(dic) 
-                return json.dumps(d1)
+                return json.dumps({'prediction': d1})
             else:
                 return jsonify({'message': "No data here to predict"})
         except:
