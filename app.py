@@ -119,7 +119,6 @@ def prediction():
                 knn_pred = knn.predict(X1)
                 out=pd.DataFrame({'cyberloaferType':knn_pred,'name':X_pred['name']})
                 out_1=out[['cyberloaferType']]
-                sns.countplot(out['cyberloaferType'])
                 out.reset_index(inplace=True)
                 l = sum(out['cyberloaferType']=='Low')
                 h = sum(out['cyberloaferType']=='High')
