@@ -130,12 +130,12 @@ def prediction():
                 res2 = {
                     'list': g,
                     'graph1': [
-                        {'x': 'low', 'y': l},
-                        {'x': 'high', 'y': h}
+                        {'x': 'Low Cyberloafer', 'y': l},
+                        {'x': 'High Cyberloafer', 'y': h}
                     ],
                     'graph2': [
-                        {'x': 'low', 'y': avgl},
-                        {'x': 'high', 'y': avgh}
+                        {'x': 'Low Cyberloafer', 'y': avgl},
+                        {'x': 'High Cyberloafer', 'y': avgh}
                     ]
                 }
                 return json.dumps({'prediction': res2})
