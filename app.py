@@ -70,8 +70,6 @@ def train():
         clus['Cyberloafer Type']=a['Cyberloafer Type']
 
         a.set_index('Name of the Employee',inplace=True)
-        # a['Cyberloafer Type']=a['Cyberloafer Type'].map({0:'High Cyberloafer',1:'Low Cyberloafer'})
-        # a.head()
         X=clus[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable']]
         y=clus['Cyberloafer Type']
         global knn
