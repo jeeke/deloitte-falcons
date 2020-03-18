@@ -96,21 +96,6 @@ def prediction():
             m = requests.get(url)
             n = m.json()   
             if n: 
-                # o=pd.DataFrame(n)
-                # p =o.T
-                # p.reset_index(inplace=True,drop=True)
-                # q=p[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
-                # q.set_index('name',inplace=True)
-                # knn_pred=knn.predict(q)
-                # out=pd.DataFrame({'Cyberloafer Type':knn_pred,'Name':q.index})
-                # out.set_index('Name',inplace=True)
-                # out.reset_index(inplace=True)
-                # print(out)
-                # d1 = []
-                # for i in range(0,len(out)):
-                #     dic = { 'name' : out.iloc[i][0],
-                #             'prediction' : out.iloc[i][1].astype('str') }
-                #     d1.append(dic) 
                 trans=pd.DataFrame(n)
                 df1=trans.T
                 df1.set_index('employeeId', inplace=True)
