@@ -115,7 +115,7 @@ def prediction():
                 df1=trans.T
                 X_pred=df1[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
                 X1=X_pred[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable']]
-                x1=X.iloc[:,0:3]
+                x1=X1.iloc[:,0:3]
                 knn_pred = knn.predict(x1)
                 out=pd.DataFrame({'cyberloaferType':knn_pred,'name':X['name']})
                 out_1=out[['cyberloaferType']]
