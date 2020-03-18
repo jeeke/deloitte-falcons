@@ -113,11 +113,11 @@ def prediction():
                 #     d1.append(dic) 
                 trans=pd.DataFrame(n)
                 df1=trans.T
+                df1.set_index('employeeId', inplace=True)
                 X_pred=df1[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
                 X1=X_pred[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable']]
-                x1=X1.iloc[:,0:3]
-                knn_pred = knn.predict(x1)
-                out=pd.DataFrame({'cyberloaferType':knn_pred,'name':X['name']})
+                knn_pred = knn.predict(X1)
+                out=pd.DataFrame({'cyberloaferType':knn_pred,'name':X_pred['name']})
                 out_1=out[['cyberloaferType']]
                 sns.countplot(out['cyberloaferType'])
                 out.reset_index(inplace=True)
