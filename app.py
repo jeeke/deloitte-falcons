@@ -92,7 +92,7 @@ def prediction():
     x = knn
     if x:
         try:
-            url = "https://falcons-cyber.firebaseio.com/predict.json"
+            url = "https://falcons-cyber.firebaseio.com/train.json"
             m = requests.get(url)
             n = m.json()   
             if n: 
