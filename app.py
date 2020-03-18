@@ -96,22 +96,55 @@ def prediction():
             m = requests.get(url)
             n = m.json()   
             if n: 
-                o=pd.DataFrame(n)
-                p =o.T
-                p.reset_index(inplace=True,drop=True)
-                q=p[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
-                q.set_index('name',inplace=True)
-                knn_pred=knn.predict(q)
-                out=pd.DataFrame({'Cyberloafer Type':knn_pred,'Name':q.index})
-                out.set_index('Name',inplace=True)
+                # o=pd.DataFrame(n)
+                # p =o.T
+                # p.reset_index(inplace=True,drop=True)
+                # q=p[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
+                # q.set_index('name',inplace=True)
+                # knn_pred=knn.predict(q)
+                # out=pd.DataFrame({'Cyberloafer Type':knn_pred,'Name':q.index})
+                # out.set_index('Name',inplace=True)
+                # out.reset_index(inplace=True)
+                # print(out)
+                # d1 = []
+                # for i in range(0,len(out)):
+                #     dic = { 'name' : out.iloc[i][0],
+                #             'prediction' : out.iloc[i][1].astype('str') }
+                #     d1.append(dic) 
+                trans=pd.DataFrame(n)
+                df1=trans.T
+                X_pred=df1[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
+                X1=X_pred[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable']]
+                x1=X.iloc[:,0:3]
+                knn_pred = knn.predict(x1)
+                out=pd.DataFrame({'cyberloaferType':knn_pred,'name':X['name']})
+                out_1=out[['cyberloaferType']]
+                sns.countplot(out['cyberloaferType'])
                 out.reset_index(inplace=True)
-                print(out)
-                d1 = []
-                for i in range(0,len(out)):
-                    dic = { 'name' : out.iloc[i][0],
-                            'prediction' : out.iloc[i][1].astype('str') }
-                    d1.append(dic) 
-                return json.dumps({'prediction': d1})
+                l = sum(out['cyberloaferType']=='Low')
+                h = sum(out['cyberloaferType']=='High')
+                g=out.to_dict('records')
+                out.set_index('employeeId',inplace=True)
+                df4=df1[['productionScore']]
+                prod=pd.concat([out_1,df4],axis=1)
+                prod.dropna(how='any',subset=['productionScore'],axis=0,inplace=True)
+                prod['productionScore']=prod['productionScore'].astype(int)
+                prod.reset_index(inplace=True)
+                means = prod.groupby('cyberloaferType')['productionScore'].mean()
+                avgl=means[1]
+                avgh=means[0]
+                res2 = {
+                    'list' : g,
+                    'graph1' : {
+                        'low' : l,
+                        'high' : h
+                    },
+                    'graph2' : {
+                        'low' : avgl,
+                        'high' : avgh
+                    }
+                }
+                return json.dumps({'prediction': res2})
             else:
                 return jsonify({'message': "No data here to predict"})
         except:
