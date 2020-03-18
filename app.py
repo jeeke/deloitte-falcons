@@ -105,8 +105,8 @@ def prediction():
                 out=pd.DataFrame({'cyberloaferType':knn_pred,'name':X_pred['name']})
                 out_1=out[['cyberloaferType']]
                 out.reset_index(inplace=True)
-                l = sum(out['cyberloaferType']=='Low')
-                h = sum(out['cyberloaferType']=='High')
+                l = sum(out['cyberloaferType']==0)
+                h = sum(out['cyberloaferType']==1)
                 g=out.to_dict('records')
                 out.set_index('employeeId',inplace=True)
                 df4=df1[['productionScore']]
