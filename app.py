@@ -53,20 +53,12 @@ def train():
         y = km.fit_predict(clus)
         a = pd.DataFrame({'Cyberloafer Type': km.labels_,
                           'Name of the Employee': df['name']})
-        l = sum(a['Cyberloafer Type'] == 0)
-        h = sum(a['Cyberloafer Type'] == 1)
         d = []
         for i in range(0, len(a)):
             dic = {'name': a.iloc[i][1],
                    'prediction': a.iloc[i][0].astype('str')}
             d.append(dic)
-        res = {
-            'list': d,
-            'graph': {
-                'low': l,
-                'high': h
-            }
-        }
+        res = {'list': d}
         global model2FileData
         model2FileData = json.dumps(res)
 
@@ -83,21 +75,18 @@ def train():
         knn = KNeighborsClassifier()
         knn.fit(X, y)
         return jsonify({'message': "Model Trained"})
-        # joblib.dump(knn, 'model3.pkl')
-        # print("Model3 dumped!")
     else:
         return jsonify({'message': "No data here to train"})
 
 
 @app.route('/prediction', methods=['GET'])
 def prediction():
-    # knn = joblib.load("model3.pkl")# Load "model.pkl"
-    # print ('knn loaded')
     global knn
     x = knn
-    if x:
+    global model2FileData
+    if x & model2FileData:
         try:
-            url = "https://falcons-cyber.firebaseio.com/train.json"
+            url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
             n = m.json()
             if n:
@@ -111,49 +100,16 @@ def prediction():
                 knn_pred = knn.predict(X1)
                 out = pd.DataFrame(
                     {'cyberloaferType': knn_pred, 'name': X_pred['name']})
-                out_1 = out[['cyberloaferType']]
                 out.reset_index(inplace=True)
-                l = sum(out['cyberloaferType'] == 0)
-                h = sum(out['cyberloaferType'] == 1)
                 g = out.to_dict('records')
-                out.set_index('employeeId', inplace=True)
-                df4 = df1[['productionScore']]
-                prod = pd.concat([out_1, df4], axis=1)
-                prod.dropna(how='any', subset=[
-                            'productionScore'], axis=0, inplace=True)
-                prod['productionScore'] = prod['productionScore'].astype(int)
-                prod.reset_index(inplace=True)
-                means = prod.groupby('cyberloaferType')[
-                    'productionScore'].mean()
-                avgl = means[1]
-                avgh = means[0]
-                res2 = {
-                    'list': g,
-                    'graph1': [
-                        {'x': 'Low Cyberloafer', 'y': l},
-                        {'x': 'High Cyberloafer', 'y': h}
-                    ],
-                    'graph2': [
-                        {'x': 'Low Cyberloafer', 'y': avgl},
-                        {'x': 'High Cyberloafer', 'y': avgh}
-                    ]
-                }
-                return json.dumps({'prediction': res2})
+                return json.dumps({'predict': g,
+                                   'train': model2FileData})
             else:
                 return jsonify({'message': "No data here to predict"})
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
         return jsonify({'message': 'Train the model first'})
-
-
-@app.route('/canalysis', methods=['GET'])
-def canalysis():
-    global model2FileData
-    if model2FileData:
-        return model2FileData
-    else:
-        return jsonify({'message': "Please train the model first"})
 
 
 if __name__ == '__main__':
