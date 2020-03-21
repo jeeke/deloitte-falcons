@@ -58,9 +58,8 @@ def train():
             dic = {'name': a.iloc[i][1],
                    'prediction': a.iloc[i][0].astype('str')}
             d.append(dic)
-        res = {'list': d}
         global model2FileData
-        model2FileData = json.dumps(res)
+        model2FileData = d
 
         a = pd.DataFrame({'Cyberloafer Type': km.labels_,
                           'Name of the Employee': df['name']})
