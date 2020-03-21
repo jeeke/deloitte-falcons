@@ -84,7 +84,9 @@ def prediction():
     global knn
     x = knn
     global model2FileData
-    if x!=None & model2FileData!=None:
+    if x == None or model2FileData == None:
+        return jsonify({'message': 'Train the model first'})
+    else:
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
@@ -105,11 +107,9 @@ def prediction():
                 return json.dumps({'predict': g,
                                    'train': model2FileData})
             else:
-                return jsonify({'message': "No data here to predict"})
+                return jsonify({'train': model2FileData})
         except:
             return jsonify({'trace': traceback.format_exc()})
-    else:
-        return jsonify({'message': 'Train the model first'})
 
 
 if __name__ == '__main__':
