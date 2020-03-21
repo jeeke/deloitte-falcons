@@ -65,17 +65,22 @@ def train():
         model2FileData = d
 
         a = pd.DataFrame({'Cyberloafer Type': km.labels_,
-                          'Name of the Employee': df['name']})
+                       'name': df['name'],
+                      'employeeId':df['employeeId']})
+        a.set_index('employeeId',inplace=True)
 
-        clus['Cyberloafer Type'] = a['Cyberloafer Type']
+        clus['Cyberloafer Type'] = a['Cyberloafer Type'].copy()
+        df.set_index('employeeId',inplace=True)
+        df['cyberloaferType']=a['cyberloaferType'].copy()
 
-        a.set_index('Name of the Employee', inplace=True)
-        X = clus[['timeSpentOnInternet',
-                  'peopleAroundUsesInternet', 'internetUseEnjoyable']]
-        y = clus['Cyberloafer Type']
+       
+        #Creating Dataframe for clustering
+        X=df[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
+        y=df['cyberloaferType'].map({0:'Low',1:'High'})
+        x1=X.iloc[:,0:3]
         global knn
         knn = KNeighborsClassifier()
-        knn.fit(X, y)
+        knn.fit(x1, y)
         return jsonify({'message': "Model Trained"})
     else:
         return jsonify({'message': "No data here to train"})
