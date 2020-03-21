@@ -46,17 +46,20 @@ def train():
         df.head()
 
         clus = df[['timeSpentOnInternet',
-                   'peopleAroundUsesInternet', 'internetUseEnjoyable']]
+                   'peopleAroundUsesInternet', 'internetUseEnjoyable','employeeId']]
+        clus.set_index('employeeId',inplace=True)
 
         km = KMeans(n_clusters=2, random_state=1)
         km.fit(clus)
         y = km.fit_predict(clus)
         a = pd.DataFrame({'Cyberloafer Type': km.labels_,
-                          'Name of the Employee': df['name']})
+                          'Name of the Employee': df['name'],
+                          'employeeId':df['employeeId']})
         d = []
         for i in range(0, len(a)):
             dic = {'name': a.iloc[i][1],
-                   'prediction': a.iloc[i][0].astype('str')}
+                   'prediction': a.iloc[i][0].astype('str'),
+                    'employeeId':a.iloc[i][2]}
             d.append(dic)
         global model2FileData
         model2FileData = d
