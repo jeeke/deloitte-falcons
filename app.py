@@ -52,8 +52,8 @@ def train():
         km = KMeans(n_clusters=2, random_state=1)
         km.fit(clus)
         y = km.fit_predict(clus)
-        a = pd.DataFrame({'Cyberloafer Type': km.labels_,
-                          'Name of the Employee': df['name'],
+        a = pd.DataFrame({'cyberloaferType': km.labels_,
+                          'name': df['name'],
                           'employeeId':df['employeeId']})
         d = []
         for i in range(0, len(a)):
@@ -64,12 +64,12 @@ def train():
         global model2FileData
         model2FileData = d
 
-        a = pd.DataFrame({'Cyberloafer Type': km.labels_,
+        a = pd.DataFrame({'cyberloaferType': km.labels_,
                        'name': df['name'],
                       'employeeId':df['employeeId']})
         a.set_index('employeeId',inplace=True)
 
-        clus['Cyberloafer Type'] = a['Cyberloafer Type'].copy()
+        clus['cyberloaferType'] = a['cyberloaferType'].copy()
         df.set_index('employeeId',inplace=True)
         df['cyberloaferType']=a['cyberloaferType'].copy()
 
