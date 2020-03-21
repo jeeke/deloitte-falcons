@@ -84,7 +84,7 @@ def prediction():
     global knn
     x = knn
     global model2FileData
-    if x & model2FileData:
+    if x!=None & model2FileData!=None:
         try:
             url = "https://falcons-cyber.firebaseio.com/predict.json"
             m = requests.get(url)
