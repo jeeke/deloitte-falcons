@@ -101,6 +101,7 @@ def prediction():
             if n:
                 trans = pd.DataFrame(n)
                 df1 = trans.T
+                df1.dropna(how='any',subset=['employeeId'],axis=0,inplace=True)
                 df1.set_index('employeeId', inplace=True)
                 X_pred = df1[['timeSpentOnInternet',
                               'peopleAroundUsesInternet', 'internetUseEnjoyable', 'name']]
