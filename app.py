@@ -58,7 +58,7 @@ def train():
         d = []
         for i in range(0, len(a)):
             dic = {'name': a.iloc[i][1],
-                   'prediction': a.iloc[i][0].astype('str'),
+                   'cyberloaferType': a.iloc[i][0].astype('str'),
                     'employeeId':a.iloc[i][2]}
             d.append(dic)
         global model2FileData
