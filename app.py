@@ -72,11 +72,10 @@ def train():
         clus['cyberloaferType'] = a['cyberloaferType'].copy()
         df.set_index('employeeId',inplace=True)
         df['cyberloaferType']=a['cyberloaferType'].copy()
-
        
         #Creating Dataframe for clustering
         X=df[['timeSpentOnInternet','peopleAroundUsesInternet','internetUseEnjoyable','name']]
-        y=df['cyberloaferType'].map({0:'Low',1:'High'})
+        # y=df['cyberloaferType'].map({0:'Low',1:'High'})
         x1=X.iloc[:,0:3]
         global knn
         knn = KNeighborsClassifier()
