@@ -1,7 +1,7 @@
  apiVersion: apps/v1
  kind: Deployment
  metadata:
-   name: flask-node-deployment
+   name: falcons-deployment
  spec:
    replicas: 1
    selector:
