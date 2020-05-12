@@ -123,5 +123,5 @@ if __name__ == '__main__':
 # On IBM Cloud Cloud Foundry, get the port number from the environment variable PORT
 # When running this app on the local machine, default the port to 8000
     import os
-    port = int(os.getenv('PORT', 8000))
+    port = int(os.getenv('PORT', 5000))
     app.run(host='0.0.0.0')
