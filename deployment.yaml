@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-node-deployment
+  name: falcons-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flasknode
+      app: falcons-api
   template:
     metadata:
       labels:
-        app: flasknode
+        app: falcons-api
     spec:
       containers:
-      - name: flasknode
+      - name: falcons-api
         image: us.icr.io/falcons/app
         imagePullPolicy: Always
         ports:

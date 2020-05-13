@@ -118,6 +118,28 @@ def prediction():
         except:
             return jsonify({'trace': traceback.format_exc()})
 
+@app.route('/submit-form', methods=['POST'])
+def createForm():
+    try:
+        r = request.json
+        print(r)
+        return jsonify({'message': "Form Saved Successfully"})
+    except:
+        return jsonify({'message': "Bad request"})
+
+@app.route('/save-score', methods=['PUT'])
+def saveScore():
+    try:
+        r = request.json
+        print(r)
+        return jsonify({'message': "Form Saved Successfully"})
+    except:
+        return jsonify({'message': "Bad request"})
+    
+@app.route('/form-count', methods=['GET'])
+def formCount():
+    return jsonify({'count': 115})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
+    app.run()
