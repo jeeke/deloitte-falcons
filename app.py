@@ -12,12 +12,22 @@ from sklearn.model_selection import train_test_split
 # from sklearn.externals import joblib
 from sklearn.cluster import KMeans
 
+import db.database as DB
+from cloudant.error import CloudantException
+from cloudant.result import Result
+from cloudant.document import Document
+
 # Your API definition
 app = Flask(__name__)
 global knn
 knn = None
 global model2FileData
 model2FileData = None
+
+global train_db_name
+train_db_name = "train-db"
+global predict_db_name
+predict_db_name = "predict-db"
 
 
 @app.route('/', methods=['GET'])
@@ -35,16 +45,17 @@ def untrain():
 
 @app.route('/train', methods=['GET'])
 def train():
-    url = "https://falcons-cyber.firebaseio.com/train.json"
-    r = requests.get(url)
-    if r:
-        v = r.json()
-        # print(v)
-        trans = pd.DataFrame(v)
+    train_db = DB.client[train_db_name]
+    v = Result(train_db.all_docs, include_docs=True)
+    if v:
+        w = {}
+        for i in v:
+            w[i['id']] = i['doc']
+        trans = pd.DataFrame(w)
         df = trans.T
         df.reset_index(inplace=True, drop=True)
         df.head()
-
+        # print(df)
         clus = df[['timeSpentOnInternet',
                    'peopleAroundUsesInternet', 'internetUseEnjoyable','employeeId']]
         clus.set_index('employeeId',inplace=True)
@@ -94,11 +105,16 @@ def prediction():
         return jsonify({'message': 'Train the model first'})
     else:
         try:
-            url = "https://falcons-cyber.firebaseio.com/predict.json"
-            m = requests.get(url)
-            n = m.json()
-            if n:
-                trans = pd.DataFrame(n)
+            predict_db = DB.client[predict_db_name]
+            n = Result(predict_db.all_docs, include_docs=True)
+            q = {}
+            for i in n:
+                q[i['id']] = i['doc']
+            if len(q) == 0:
+                return jsonify({'train': model2FileData})
+            else:
+                trans = pd.DataFrame(q)
+                print(trans)
                 df1 = trans.T
                 df1.dropna(how='any',subset=['employeeId'],axis=0,inplace=True)
                 df1.set_index('employeeId', inplace=True)
@@ -113,33 +129,69 @@ def prediction():
                 g = out.to_dict('records')
                 return json.dumps({'predict': g,
                                    'train': model2FileData})
-            else:
-                return jsonify({'train': model2FileData})
         except:
             return jsonify({'trace': traceback.format_exc()})
 
 @app.route('/submit-form', methods=['POST'])
-def createForm():
+def saveForm():
     try:
+        global knn
+        x = knn
+        global model2FileData
+        db_name = ""
+        if x == None or model2FileData == None: db_name = "train-db"
+        else: db_name = "predict-db"
         r = request.json
-        print(r)
-        return jsonify({'message': "Form Saved Successfully"})
+        r['_id'] = r['employeeId']
+        my_database = DB.client[db_name]
+        new_document = my_database.create_document(r)
+
+        if new_document.exists():
+            return jsonify({'message': "Form Saved Successfully"})
+        else:
+            return jsonify({'message': "Form Couldn't be saved"})
     except:
-        return jsonify({'message': "Bad request"})
+        return jsonify({'message': "Ensure all fields are filled"})
 
 @app.route('/save-score', methods=['PUT'])
 def saveScore():
     try:
         r = request.json
-        print(r)
-        return jsonify({'message': "Form Saved Successfully"})
+        emp_id = r['employeeId']
+        score = r['performanceScore']
+        try:
+            train_db = DB.client[train_db_name]
+            train_document = train_db[emp_id]
+            train_document['performanceScore'] = score
+            train_document.save()
+            return jsonify({'message': "Score saved successfully"})
+        except KeyError:
+            try:
+                predict_db = DB.client[predict_db_name]
+                predict_document = predict_db[emp_id]
+                predict_document['performanceScore'] = score
+                predict_document.save()
+                return jsonify({'message': "Score saved successfully"})
+            except KeyError: 
+                return jsonify({'message': "No form submitted with this employee id"})
     except:
+        import sys
+        print("Oops!", sys.exc_info()[0], "occured.")
         return jsonify({'message': "Bad request"})
     
 @app.route('/form-count', methods=['GET'])
 def formCount():
-    return jsonify({'count': 115})
+    train_db = DB.client[train_db_name]
+    predict_db = DB.client[predict_db_name]
+    count = train_db.doc_count() + predict_db.doc_count()
+    return jsonify({'count': count})
+
+@app.route('/batch-upload', methods=['POST'])
+def upload():
+    r = request.json
+    train_db = DB.client[train_db_name]
+    return jsonify({'status': train_db.bulk_docs(r)})
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0')
-    app.run()
+    app.run(host='0.0.0.0')
+    # app.run()

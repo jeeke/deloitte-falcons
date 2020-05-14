@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: falcons-api
-        image: us.icr.io/falcons/app
+        # image: us.icr.io/falcons/app
+        image: jeeke/falcons-api:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
